@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Plant</title>
+</head>
+<body>
+  <h2>Add a New Plant</h2>
+  <form id="plantForm">
+    <input type="text" placeholder="Name" name="name" required /><br />
+
+    <label>Temperature Range:</label><br />
+    <input type="number" placeholder="Min Temp" name="tempMin" required />
+    <input type="number" placeholder="Max Temp" name="tempMax" required /><br />
+
+    <label>Light Range:</label><br />
+    <input type="number" placeholder="Min Light" name="lightMin" required />
+    <input type="number" placeholder="Max Light" name="lightMax" required /><br />
+
+    <label>Soil Moisture Range:</label><br />
+    <input type="number" placeholder="Min Soil" name="soilMin" required />
+    <input type="number" placeholder="Max Soil" name="soilMax" required /><br />
+
+    <textarea name="description" placeholder="Description"></textarea><br />
+    <input type="text" placeholder="Photo URL" name="photo" /><br />
+    
+    <button type="submit">Add Plant</button>
+  </form>
+
+  <script>
+    document.getElementById("plantForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const data = Object.fromEntries(form.entries());
+
+      const payload = {
+        name: data.name,
+        defaultTemp: {
+          min: Number(data.tempMin),
+          max: Number(data.tempMax)
+        },
+        defaultLight: {
+          min: Number(data.lightMin),
+          max: Number(data.lightMax)
+        },
+        defaultSoil: {
+          min: Number(data.soilMin),
+          max: Number(data.soilMax)
+        },
+        description: data.description,
+        photo: data.photo
+      };
+
+      const res = await fetch("http://localhost:3000/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+      alert(JSON.stringify(result));
+    });
+  </script>
+</body>
+</html>
